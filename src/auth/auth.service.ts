@@ -1,16 +1,19 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { RefeshTokenEntity } from '../entities';
-import { GLOBAL, passwordCompare } from '../utils';
+import { RefeshTokenEntity, UserEntity } from '../entities';
+import { GLOBAL } from '../utils';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JWTPayload } from '../dto';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { UserTbService } from '@/service/user-tb/user-tb.service';
+import { UserService } from '@/api/user/user.service';
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UserTbService,
+    private userService: UserService,
     private jwtService: JwtService,
     @InjectRepository(RefeshTokenEntity)
     private refeshTokenRepository: Repository<RefeshTokenEntity>,
@@ -21,12 +24,11 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException('USER_NOT_EXIST');
     }
-    const validatePassword = await passwordCompare(password, user.Password);
-
-    if (validatePassword) {
+    if (await bcrypt.compare(password, user.Password)) {
       const { Password, ...result } = user;
       return result;
-    } else return null;
+    }
+    return null;
   }
 
   async login(
@@ -61,7 +63,6 @@ export class AuthService {
       email: user.Email,
       id: user.ID.toString(),
       phone: user.Phone,
-      role: user.Role.toString(),
       rf_token: token.ID,
     };
     const Refeshtoken = await this.jwtService.sign(

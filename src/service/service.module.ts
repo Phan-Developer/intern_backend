@@ -1,16 +1,14 @@
 import { Module } from '@nestjs/common';
 import { UserTbModule } from './user-tb/user-tb.module';
-import { TypeRoomTbModule } from './type-room-tb/type-room-tb.module';
-import { AmenityTbModule } from './amenity-tb/amenity-tb.module';
-import { DeviceTbModule } from './device-tb/device-tb.module';
-import { NotificationTbModule } from './notification-tb/notification-tb.module';
+import { CommentTbModule } from './comment-tb/comment-tb.module';
+import { RoomTbModule } from './room-tb/room-tb.module';
+import { BookingTbModule } from './booking-tb/booking-tb.module';
 
 const REUSE_LIST = [
   UserTbModule,
-  TypeRoomTbModule,
-  AmenityTbModule,
-  DeviceTbModule,
-  NotificationTbModule,
+  CommentTbModule,
+  RoomTbModule,
+  BookingTbModule,
 ];
 @Module({
   imports: [...REUSE_LIST],
