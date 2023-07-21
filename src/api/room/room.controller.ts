@@ -13,6 +13,8 @@ import { RoomService } from './room.service';
 import { CreateRoomDto, UpdateRoomDto } from '@/dto/Room.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Pagination } from '@/service/comment-tb/comment-tb.service';
+import { Roles as roles } from '@/utils/variable';
+import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
 
 @Controller('room')
 export class RoomController {
