@@ -97,6 +97,7 @@ export class NotificationController {
     @Param('id', ParseUUIDPipe) id: string,
     @Query() pagination: Pagination,
   ) {
+    console.log('abc');
     const paginate = {
       page: pagination.page ? pagination.page : 1,
       size: pagination.size ? pagination.size : 10,
