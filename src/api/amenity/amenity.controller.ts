@@ -56,14 +56,12 @@ export class AmenityController {
 
   // Find
   @Get()
-  @ApiBearerAuth()
   async find(@Query() pagination: Pagination) {
     return await this.amenityService.findAndPagination(pagination);
   }
 
   // Find by id
   @Get(':id')
-  @ApiBearerAuth()
   async findById(@Param('id', ParseUUIDPipe) id: string) {
     return await this.amenityService.findById(id);
   }

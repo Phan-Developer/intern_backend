@@ -56,14 +56,12 @@ export class TypeRoomController {
 
   // Find
   @Get()
-  @ApiBearerAuth()
   async findTypeRoom(@Query() pagination: Pagination) {
     return await this.typeRoomService.find(pagination);
   }
 
   // Find by Type Room Id
   @Get(':id')
-  @ApiBearerAuth()
   async findByTypeRoomId(@Param('id', ParseUUIDPipe) id: string) {
     return await this.typeRoomService.findById(id);
   }
