@@ -1,64 +1,57 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional } from 'class-validator';
+import { Amenity } from '../utils';
 
-export class GeneralDataDeviceDto {
+// new
+export class DeviceDto {
   @ApiProperty({ type: String })
-  IpAddress: string;
-
-  @ApiProperty({ type: String })
-  Description: string;
-
-  @ApiProperty({ type: Boolean })
-  IsServer: boolean;
-}
-export class CreateDeviceDto extends GeneralDataDeviceDto {
-  @ApiProperty({ type: String })
-  @IsNotEmpty({ message: 'Tên không được để trống' })
-  Name: string;
-
-  @ApiProperty({ type: String })
-  @IsNotEmpty({ message: 'Imei không được để trống' })
-  Imei: string;
-
-  @ApiProperty({ type: String })
-  @IsNotEmpty({ message: 'Thông tin bãi xe không được để trống' })
-  ParkingId: string;
-
-  @ApiProperty({ type: String })
-  @IsNotEmpty({ message: 'Port không được để trống' })
-  Port: string;
-}
-
-export class UpdateDeviceDto extends GeneralDataDeviceDto {
-  @ApiProperty({ type: String })
-  @IsNotEmpty({ message: 'ID không được để trống' })
   ID: string;
 
   @ApiProperty({ type: String })
-  @IsOptional()
-  @IsNotEmpty({ message: 'Tên không được để trống' })
+  Name: string;
+
+  @ApiProperty({ type: Object })
+  Amenity: Amenity;
+}
+
+export class CreateDeviceDto {
+  @ApiProperty({ type: String })
+  @IsNotEmpty({ message: 'Tên thiết bị không được để trống' })
   Name: string;
 
   @ApiProperty({ type: String })
-  @IsOptional()
-  @IsNotEmpty({ message: 'Thông tin bãi xe không được để trống' })
-  ParkingId: string;
-
-  @ApiProperty({ type: String })
-  @IsOptional()
-  @IsNotEmpty({ message: 'Imei không được để trống' })
-  Imei: string;
-
-  @ApiProperty({ type: Boolean })
-  IsInsert?: boolean;
+  @IsNotEmpty({ message: 'Mã loại tiện nghi không được để trống' })
+  AmenityId: string;
 }
 
-export class UpdateIpByApp {
+export class CreateDeviceParams {
   @ApiProperty({ type: String })
-  @IsNotEmpty({ message: 'Imei không được để trống' })
-  Imei: string;
+  @IsNotEmpty({ message: 'Tên thiết bị không được để trống' })
+  Name: string;
+
+  @ApiProperty({ type: Object })
+  @IsNotEmpty({ message: 'Mã loại tiện nghi không được để trống' })
+  Amenity: Amenity;
+}
+
+export class UpdateDeviceDto {
+  @ApiProperty({ type: String })
+  @IsOptional()
+  @IsNotEmpty({ message: 'Tên thiết bị không được để trống' })
+  Name: string;
 
   @ApiProperty({ type: String })
-  @IsNotEmpty({ message: 'IpAddress không được để trống' })
-  IpAddress: string;
+  @IsNotEmpty({ message: 'Mã loại tiện nghi không được để trống' })
+  AmenityId: string;
+}
+
+export class UpdateDeviceParams {
+  @ApiProperty({ type: String })
+  @IsOptional()
+  @IsNotEmpty({ message: 'Tên thiết bị không được để trống' })
+  Name: string;
+
+  @ApiProperty({ type: Object })
+  @IsNotEmpty({ message: 'Mã loại tiện nghi không được để trống' })
+  Amenity: Amenity;
 }

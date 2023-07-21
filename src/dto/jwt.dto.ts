@@ -4,4 +4,6 @@ export class JWTPayload {
   Email: string;
 
   Phone: string;
+
+  Role: string;
 }

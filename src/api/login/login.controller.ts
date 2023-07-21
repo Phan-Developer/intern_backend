@@ -62,6 +62,7 @@ export class LoginController {
   async login(@Request() req) {
     const { user, client_data } = req;
     if (!user) {
+      console.log('here');
       throw new UnauthorizedException('USER_NOT_VALIDATE');
     }
     return this.authService.login(user, client_data);
