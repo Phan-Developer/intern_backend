@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import * as bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
 
 export const getDirPath = (dirPath: any) => {
   try {
@@ -64,7 +64,6 @@ export const getDirPathUpload = (TableName: string) => {
     console.log(error.message);
   }
 };
-
 export const encodePassword = async (password: string): Promise<string> => {
   return bcrypt.hash(password, bcrypt.genSaltSync());
 };

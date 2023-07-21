@@ -2,7 +2,7 @@ import { JWTPayload } from '@/dto/jwt.dto';
 import { UserTbService } from '@/service/user-tb/user-tb.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UploadFileService } from '../upload-file/upload-file.service';
-import { UserUpdate } from '@/dto/user.dto';
+import { UserRegister, UserUpdate } from '@/dto/user.dto';
 
 @Injectable()
 export class UserService {
@@ -10,6 +10,10 @@ export class UserService {
     private readonly userTbService: UserTbService,
     private readonly uploadFileService: UploadFileService,
   ) {}
+
+  async createUser(userRegister: UserRegister) {
+    return await this.userTbService.create(userRegister);
+  }
 
   async updateUserByWeb(data: UserUpdate, jwtPayload: JWTPayload, files: any) {
     const userFind = await this.userTbService.findById(data.ID);

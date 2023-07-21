@@ -1,6 +1,6 @@
+import { Amenity } from '@/utils/types';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional } from 'class-validator';
-import { Amenity } from '../utils';
 
 // new
 export class DeviceDto {

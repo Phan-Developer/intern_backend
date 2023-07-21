@@ -68,7 +68,8 @@ export class NotificationService {
     const allNotifyOfUserDeleted = await this.notifyTbService.deleteByUserId(
       userId,
     );
-    if (allNotifyOfUserDeleted.affected !== 1)
+
+    if (allNotifyOfUserDeleted.affected === 0)
       throw new HttpException(
         'Lỗi khi thực thi lệnh xóa',
         HttpStatus.BAD_REQUEST,

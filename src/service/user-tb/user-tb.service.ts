@@ -60,6 +60,7 @@ export class UserTbService {
       Password: hashPw,
       Name: userRegister.Name,
       Phone: userRegister.Phone,
+      Address: userRegister.Address,
       Avatar: null,
     });
     const newUser = await this.userRepository.save(user);

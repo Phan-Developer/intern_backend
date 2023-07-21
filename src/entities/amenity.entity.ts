@@ -1,5 +1,5 @@
 import { GLOBAL } from '@/utils/index';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { DeviceEntity } from './device.entity';
 import { ParentWeb } from './common';
 
