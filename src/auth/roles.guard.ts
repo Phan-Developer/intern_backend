@@ -28,6 +28,6 @@ export class RolesGuard extends AuthGuard('jwt') {
     // successfull authentication, user is injected
     const { user } = context.switchToHttp().getRequest();
 
-    return requiredRoles.some((role) => user?.role?.includes(role));
+    return requiredRoles.some((role) => user?.Role?.includes(role));
   }
 }

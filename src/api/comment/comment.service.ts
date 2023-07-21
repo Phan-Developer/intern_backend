@@ -15,7 +15,6 @@ export class CommentService {
   ) {}
 
   async getComment(pagination: Pagination) {
-    console.log('object');
     return this.commentTbService.findAll(pagination);
   }
 
@@ -39,8 +38,12 @@ export class CommentService {
     );
   }
 
-  async delete(id: string): Promise<string> {
-    await this.commentTbService.delete(id);
+  async delete(id: string, userId: string): Promise<string> {
+    const user = await this.userTbService.findById(userId);
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+    await this.commentTbService.delete(id, userId);
     return 'Xoá bình luận thành công';
   }
 }

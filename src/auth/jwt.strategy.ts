@@ -1,7 +1,7 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { GLOBAL } from '@/utils/index';
+import { GLOBAL, Roles } from '@/utils/index';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RefeshTokenEntity } from '../entities';
 import { Repository } from 'typeorm';
@@ -23,6 +23,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     email: string;
     id: string;
     phone: string;
+    role: Roles;
     iat: number;
     exp: number;
     rf_token: string;
@@ -47,6 +48,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('A_TOKEN_EXPIRED');
     }
 
-    return { ID: payload.id, Email: payload.email, Phone: payload.phone };
+    return {
+      ID: payload.id,
+      Email: payload.email,
+      Phone: payload.phone,
+      Role: payload.role,
+    };
   }
 }
