@@ -8,12 +8,18 @@ import {
   Param,
   Delete,
   ParseUUIDPipe,
+  UseGuards,
+  Request,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateCommentDto, UpdateCommentDto } from '@/dto/Comment.dto';
-import { query } from 'express';
 import { Pagination } from '@/service/comment-tb/comment-tb.service';
+import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
+import { RolesGuard } from '@/auth/roles.guard';
+import { Roles } from '@/auth/roles.decorator';
+import { Roles as roles } from '@/utils/variable';
 
 @Controller('comment')
 export class CommentController {
@@ -34,33 +40,56 @@ export class CommentController {
     return await this.commentService.getComment(pagination);
   }
 
+  @ApiBearerAuth()
   @ApiTags('comment')
   @Post()
-  async createComment(@Body() createCommentDto: CreateCommentDto) {
+  @Roles(roles.USER, roles.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  async createComment(
+    @Body() createCommentDto: CreateCommentDto,
+    @Request() req: any,
+  ) {
+    if (!req.user) {
+      throw new UnauthorizedException();
+    }
     return this.commentService.create({
       ...createCommentDto,
-      UserId: 'b0f2004c-cd44-40cf-b026-e01e3845d59d',
-      RoomId: '1eb340b3-1605-45f4-a10e-ad0c01582c18',
+      UserId: req.user.ID,
     });
   }
 
+  @ApiBearerAuth()
   @ApiTags('comment')
+  @Roles(roles.USER, roles.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Put(':id')
   async editComment(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateCommentDto: UpdateCommentDto,
+    @Request() req: any,
   ) {
-    const userId = '231312312';
+    if (!req.user) {
+      throw new UnauthorizedException();
+    }
     return await this.commentService.updateComment(
       id,
       updateCommentDto,
-      userId,
+      req.user.ID,
     );
   }
 
+  @ApiBearerAuth()
   @ApiTags('comment')
+  @Roles(roles.USER, roles.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':id')
-  async deleteComment(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.commentService.delete(id);
+  async deleteComment(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Request() req: any,
+  ) {
+    if (!req.user) {
+      throw new UnauthorizedException();
+    }
+    return await this.commentService.delete(id, req.user.ID);
   }
 }

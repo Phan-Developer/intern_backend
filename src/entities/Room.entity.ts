@@ -1,8 +1,9 @@
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { GLOBAL } from '../utils';
 import { ParentWeb } from './common';
 import { CommentEntity } from './Comment.entity';
 import { BookingEntity } from './Booking.entity';
+import { TypeRoomEntity } from './type.room.entity';
 
 @Entity({ name: 'rooms', database: GLOBAL.G_DB_NAME })
 export class RoomEntity extends ParentWeb {
@@ -22,14 +23,13 @@ export class RoomEntity extends ParentWeb {
   })
   Description: string;
 
-  @Column({ nullable: true, type: 'varchar', length: 255 })
-  Images: string;
+  @Column({ type: 'simple-array' })
+  Images: string[];
 
   @Column({
-    type: 'nvarchar',
+    type: 'text',
     charset: 'utf8mb4',
     collation: 'utf8mb4_unicode_ci',
-    length: 255,
     nullable: true,
   })
   Address: string;
@@ -63,4 +63,10 @@ export class RoomEntity extends ParentWeb {
 
   @OneToMany(() => BookingEntity, (booking) => booking.RoomId)
   Bookings: BookingEntity[];
+
+  @ManyToOne(() => TypeRoomEntity, (typeRoom) => typeRoom.Rooms)
+  @JoinColumn({
+    name: 'TypeRoomId',
+  })
+  TypeRoomId: TypeRoomEntity;
 }

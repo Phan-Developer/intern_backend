@@ -92,7 +92,7 @@ export class CommentTbService {
     const user = await this.userTbService.findById(userId);
     if (comment.UserId !== user) {
       throw new HttpException(
-        'Bạn không có quyền xoá bình luận này',
+        'Bạn không có quyền cập nhật bình luận này',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -105,10 +105,17 @@ export class CommentTbService {
     return await this.commentRepository.save(comment);
   }
 
-  async delete(id: string) {
+  async delete(id: string, userId: string) {
     const comment = await this.commentRepository.findOne({ where: { ID: id } });
     if (!comment) {
       throw new NotFoundException('Không tìm thây comment');
+    }
+    const user = await this.userTbService.findById(userId);
+    if (comment.UserId !== user && user.Role === 'USER') {
+      throw new HttpException(
+        'Bạn không có quyền xoá bình luận này',
+        HttpStatus.BAD_REQUEST,
+      );
     }
     return await this.commentRepository.softDelete(id);
   }

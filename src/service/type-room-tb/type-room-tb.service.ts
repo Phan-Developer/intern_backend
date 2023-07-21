@@ -50,4 +50,11 @@ export class TypeRoomTbService {
       where: { ...options },
     });
   }
+
+  // Find by id
+  async findById(id: string) {
+    return await this.typeRoomRepository.findOne({
+      where: { ID: id },
+    });
+  }
 }

@@ -10,9 +10,8 @@ export class CreateRoomDto {
   @IsNotEmpty({ message: 'Mô tả không được để trống' })
   Description: string;
 
-  @ApiProperty({ type: String })
-  @IsNotEmpty({ message: 'Hình ảnh không được để trống' })
-  Images: string;
+  @ApiProperty({ type: Object })
+  Images?: string[];
 
   @ApiProperty({ type: String })
   @IsNotEmpty({ message: 'Địa chỉ không được để trống' })
@@ -41,6 +40,10 @@ export class CreateRoomDto {
   @ApiProperty({ type: Number })
   @IsNotEmpty({ message: ' Số giường ngủ không được để trống' })
   Price: number;
+
+  @ApiProperty({ type: String })
+  @IsNotEmpty({ message: 'Mã loại phòng không được để trống' })
+  TypeRoomId: string;
 }
 
 export class UpdateRoomDto {
@@ -50,8 +53,8 @@ export class UpdateRoomDto {
   @ApiProperty({ type: String })
   Description: string;
 
-  @ApiProperty({ type: String })
-  Images: string;
+  @ApiProperty({ type: Object })
+  Images: string[];
 
   @ApiProperty({ type: String })
   Address: string;
@@ -76,4 +79,8 @@ export class UpdateRoomDto {
 
   @ApiProperty({ type: Boolean })
   IsBooking: boolean;
+
+  @ApiProperty({ type: String })
+  @IsNotEmpty({ message: 'Mã loại phòng không được để trống' })
+  TypeRoomId: string;
 }
