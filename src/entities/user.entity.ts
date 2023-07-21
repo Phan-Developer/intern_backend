@@ -3,6 +3,7 @@ import { Column, Entity, OneToMany } from 'typeorm';
 import { ParentWeb } from './common';
 import { BookingEntity } from './Booking.entity';
 import { CommentEntity } from './Comment.entity';
+import { NotificationEntity } from './notification.entity';
 
 enum Roles {
   ADMIN = 'ADMIN',
@@ -37,4 +38,7 @@ export class UserEntity extends ParentWeb {
 
   @OneToMany(() => CommentEntity, (comment) => comment.UserId)
   Comments: CommentEntity[];
+
+  @OneToMany(() => NotificationEntity, (notify) => notify.UserId)
+  Notifications: NotificationEntity[];
 }

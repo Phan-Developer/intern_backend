@@ -1,6 +1,6 @@
+import { User } from '@/utils/types';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional } from 'class-validator';
-import { User } from '../utils';
 
 export class CreateNotifyDto {
   @ApiProperty({ type: String })

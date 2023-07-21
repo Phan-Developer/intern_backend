@@ -63,6 +63,7 @@ export class AuthService {
       email: user.Email,
       id: user.ID.toString(),
       phone: user.Phone,
+      role: user.Role.toString(),
       rf_token: token.ID,
     };
     const Refeshtoken = await this.jwtService.sign(
