@@ -57,7 +57,6 @@ export class AmenityController {
   // Find
   @Get()
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
   async find(@Query() pagination: Pagination) {
     return await this.amenityService.findAndPagination(pagination);
   }
@@ -65,7 +64,6 @@ export class AmenityController {
   // Find by id
   @Get(':id')
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
   async findById(@Param('id', ParseUUIDPipe) id: string) {
     return await this.amenityService.findById(id);
   }
