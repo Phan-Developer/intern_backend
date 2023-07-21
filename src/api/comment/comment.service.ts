@@ -15,6 +15,7 @@ export class CommentService {
   ) {}
 
   async getComment(pagination: Pagination) {
+    console.log('object');
     return this.commentTbService.findAll(pagination);
   }
 
