@@ -15,12 +15,7 @@ export class UserLogin {
   Password: string;
 }
 
-export class GeneralDataUserDto {
-  @ApiProperty({ type: Boolean })
-  IsLoginCloud?: boolean;
-}
-
-export class UserRegister extends GeneralDataUserDto {
+export class UserRegister {
   @ApiProperty({ type: String })
   @IsOptional()
   @IsEmail()
@@ -29,6 +24,10 @@ export class UserRegister extends GeneralDataUserDto {
   @ApiProperty({ type: String })
   @IsNotEmpty({ message: 'Tên không được để trống' })
   Name: string;
+
+  @ApiProperty({ type: String })
+  @IsNotEmpty({ message: 'Địa chỉ không được để trống' })
+  Address: string;
 
   @ApiProperty({ type: String })
   @IsNotEmpty({ message: 'Mật khẩu không được để trống' })
@@ -41,7 +40,7 @@ export class UserRegister extends GeneralDataUserDto {
   Phone: string;
 }
 
-export class UserUpdate extends GeneralDataUserDto {
+export class UserUpdate {
   @ApiProperty({ type: String })
   @IsOptional()
   @IsEmail()
@@ -61,6 +60,11 @@ export class UserUpdate extends GeneralDataUserDto {
   @IsOptional()
   @IsNotEmpty({ message: 'Tên không được để trống' })
   Name: string;
+
+  @ApiProperty({ type: String })
+  @IsOptional()
+  @IsNotEmpty({ message: 'Địa chỉ không được để trống' })
+  Address: string;
 
   @ApiProperty({ type: String })
   @IsOptional()

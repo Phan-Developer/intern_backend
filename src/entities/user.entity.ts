@@ -1,6 +1,7 @@
-import { GLOBAL } from '@/utils/variable';
-import { Column, Entity } from 'typeorm';
+import { GLOBAL, Roles } from '@/utils/variable';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { ParentWeb } from './common';
+import { NotificationEntity } from './notification.entity';
 
 @Entity({ name: 'users', database: GLOBAL.G_DB_NAME })
 export class UserEntity extends ParentWeb {
@@ -17,8 +18,18 @@ export class UserEntity extends ParentWeb {
   Phone: string;
 
   @Column({ nullable: true, type: 'nvarchar', length: 255 })
+  Address: string;
+
+  @Column({ nullable: true, type: 'nvarchar', length: 255 })
   Avatar: string;
 
-  @Column({ type: 'bit', default: false })
-  IsSupperAdmin: boolean;
+  @Column({
+    type: 'enum',
+    enum: Roles,
+    default: Roles.USER,
+  })
+  Role: Roles;
+
+  @OneToMany(() => NotificationEntity, (notify) => notify.UserId)
+  Notifications: NotificationEntity[];
 }

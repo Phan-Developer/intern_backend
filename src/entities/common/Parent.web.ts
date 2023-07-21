@@ -20,6 +20,6 @@ export class ParentWeb {
   @DeleteDateColumn()
   DeletedAt: Date;
 
-  @ManyToOne(() => UserEntity, (user) => user.ID, { nullable: true })
-  UserCreate: UserEntity;
+  // @ManyToOne(() => UserEntity, (user) => user.ID, { nullable: true })
+  // UserCreate: UserEntity;
 }
