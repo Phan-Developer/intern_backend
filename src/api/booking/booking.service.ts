@@ -16,11 +16,11 @@ export class BookingService {
     return this.bookingTbService.findAll(pagination);
   }
 
-  async create(createBookingDto: CreateBookingDto): Promise<BookingEntity> {
-    return await this.bookingTbService.create(
-      createBookingDto,
-      'b0f2004c-cd44-40cf-b026-e01e3845d59d',
-    );
+  async create(
+    createBookingDto: CreateBookingDto,
+    userId: string,
+  ): Promise<BookingEntity> {
+    return await this.bookingTbService.create(createBookingDto, userId);
   }
 
   async update(

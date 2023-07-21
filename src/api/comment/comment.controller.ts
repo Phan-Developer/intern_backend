@@ -15,12 +15,12 @@ import {
 import { CommentService } from './comment.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateCommentDto, UpdateCommentDto } from '@/dto/Comment.dto';
-import { query } from 'express';
 import { Pagination } from '@/service/comment-tb/comment-tb.service';
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
 import { RolesGuard } from '@/auth/roles.guard';
 import { Roles } from '@/auth/roles.decorator';
 import { Roles as roles } from '@/utils/variable';
+
 @Controller('comment')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
