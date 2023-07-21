@@ -1,7 +1,13 @@
-import { GLOBAL, Roles } from '@/utils/variable';
+import { GLOBAL } from '@/utils/variable';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { ParentWeb } from './common';
-import { NotificationEntity } from './notification.entity';
+import { BookingEntity } from './Booking.entity';
+import { CommentEntity } from './Comment.entity';
+
+enum Roles {
+  ADMIN = 'ADMIN',
+  USER = 'USER',
+}
 
 @Entity({ name: 'users', database: GLOBAL.G_DB_NAME })
 export class UserEntity extends ParentWeb {
@@ -17,19 +23,18 @@ export class UserEntity extends ParentWeb {
   @Column({ unique: true, type: 'varchar', length: 13 })
   Phone: string;
 
-  @Column({ nullable: true, type: 'nvarchar', length: 255 })
+  @Column({ type: 'nvarchar', length: 255 })
   Address: string;
 
   @Column({ nullable: true, type: 'nvarchar', length: 255 })
   Avatar: string;
 
-  @Column({
-    type: 'enum',
-    enum: Roles,
-    default: Roles.USER,
-  })
+  @Column({ type: 'enum', enum: Roles, default: Roles.USER })
   Role: Roles;
 
-  @OneToMany(() => NotificationEntity, (notify) => notify.UserId)
-  Notifications: NotificationEntity[];
+  @OneToMany(() => BookingEntity, (booking) => booking.UserId)
+  Bookings: BookingEntity[];
+
+  @OneToMany(() => CommentEntity, (comment) => comment.UserId)
+  Comments: CommentEntity[];
 }

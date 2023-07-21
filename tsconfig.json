@@ -15,7 +15,6 @@
       "@/dto/*": ["./src/dto/*"],
       "@/utils/*": ["./src/utils/*"],
       "@/api/*": ["./src/api/*"],
-      "@/auth/*": ["./src/auth/*"],
       "@/service/*": ["./src/service/*"]
     },
     "incremental": true,

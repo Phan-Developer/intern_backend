@@ -20,11 +20,4 @@ const GLOBAL = {
   G_JWT_KEY_ACCESS_TOKEN,
 };
 
-// constains
-export const ROLES_KEY = 'roles';
-export enum Roles {
-  ADMIN = 'ADMIN',
-  USER = 'USER',
-}
-
 export { GLOBAL };
