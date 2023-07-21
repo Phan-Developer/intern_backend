@@ -57,7 +57,6 @@ export class TypeRoomController {
   // Find
   @Get()
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
   async findTypeRoom(@Query() pagination: Pagination) {
     return await this.typeRoomService.find(pagination);
   }
@@ -65,7 +64,6 @@ export class TypeRoomController {
   // Find by Type Room Id
   @Get(':id')
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
   async findByTypeRoomId(@Param('id', ParseUUIDPipe) id: string) {
     return await this.typeRoomService.findById(id);
   }

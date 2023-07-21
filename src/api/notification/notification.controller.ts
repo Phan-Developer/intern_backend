@@ -74,7 +74,6 @@ export class NotificationController {
   // Find and pagination
   @Get()
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
   async findAndPagination(@Query() pagination: Pagination) {
     return await this.notificationService.findAndPagination(pagination);
   }
@@ -82,7 +81,6 @@ export class NotificationController {
   // Find by notify id
   @Get('by-notify/:id')
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
   async findByNotifyId(@Param('id', ParseUUIDPipe) id: string) {
     return await this.notificationService.findByNotifyId(id);
   }
