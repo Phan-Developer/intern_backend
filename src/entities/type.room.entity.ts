@@ -1,6 +1,7 @@
 import { GLOBAL } from '@/utils/index';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { ParentWeb } from './common';
+import { RoomEntity } from './Room.entity';
 
 @Entity({ name: 'type_rooms', database: GLOBAL.G_DB_NAME })
 export class TypeRoomEntity extends ParentWeb {
@@ -19,4 +20,7 @@ export class TypeRoomEntity extends ParentWeb {
     nullable: true,
   })
   Description: string;
+
+  @OneToMany(() => RoomEntity, (room) => room.TypeRoomId, { nullable: true })
+  Rooms: RoomEntity[];
 }

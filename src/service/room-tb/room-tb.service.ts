@@ -3,11 +3,12 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Pagination } from '../comment-tb/comment-tb.service';
+import { TypeRoom } from '@/utils/types';
 
 export interface CreateRoomParams {
   Title: string;
   Description: string;
-  Images: string;
+  Images?: string[]; // edit
   Address: string;
   Latitude: string;
   Longtitude: string;
@@ -15,12 +16,13 @@ export interface CreateRoomParams {
   Bedroom: number;
   Beds: number;
   Price: number;
+  TypeRoomId: TypeRoom;
 }
 
 export interface UpdateRoomParams {
   Title?: string;
   Description?: string;
-  Images?: string;
+  Images?: string[];
   Address?: string;
   Latitude?: string;
   Longtitude?: string;
@@ -29,6 +31,7 @@ export interface UpdateRoomParams {
   Beds?: number;
   Price?: number;
   IsBooking?: boolean;
+  TypeRoomId: TypeRoom;
 }
 
 @Injectable()
@@ -39,7 +42,10 @@ export class RoomTbService {
   ) {}
 
   async findById(id: string): Promise<RoomEntity> {
-    return await this.roomRepository.findOne({ where: { ID: id } });
+    return await this.roomRepository.findOne({
+      where: { ID: id },
+      relations: ['TypeRoomId'],
+    });
   }
 
   async findAll(pagination: Pagination) {
@@ -48,6 +54,7 @@ export class RoomTbService {
     const totaPage = Math.ceil(totalComment / pagination.take);
 
     const rooms = await this.roomRepository.find({
+      relations: ['TypeRoomId'],
       take: pagination.take,
       skip: skip,
     });
@@ -61,11 +68,11 @@ export class RoomTbService {
   }
 
   async create(createRoomParams: CreateRoomParams): Promise<RoomEntity> {
-    const craeteRoom = await this.roomRepository.create(createRoomParams);
+    const craeteRoom = this.roomRepository.create(createRoomParams);
     return await this.roomRepository.save(craeteRoom);
   }
 
-  async update(roomId: string, updateRoomParams: UpdateRoomParams) {
+  async update(roomId: string, updateRoomParams: Partial<UpdateRoomParams>) {
     const room = await this.findById(roomId);
     if (!room) {
       throw new NotFoundException('Không tìm thấy phòng');

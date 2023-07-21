@@ -8,11 +8,15 @@ import {
   Get,
   Query,
   Delete,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { CreateRoomDto, UpdateRoomDto } from '@/dto/Room.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Pagination } from '@/service/comment-tb/comment-tb.service';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { fileExtensionFilter, storegeConfig } from '@/utils/filters';
 
 @Controller('room')
 export class RoomController {
@@ -41,17 +45,48 @@ export class RoomController {
 
   @ApiTags('room')
   @Post()
-  async createRoom(@Body() createRoomDto: CreateRoomDto) {
-    return await this.roomService.create(createRoomDto);
+  @UseInterceptors(
+    FilesInterceptor('files', 20, {
+      fileFilter: fileExtensionFilter,
+      storage: storegeConfig('rooms'),
+    }),
+  )
+  async createRoom(
+    @Body() createRoomDto: CreateRoomDto,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+  ) {
+    const arrayImage = files.map((file) => {
+      return `${file.destination}/${file.filename}`;
+    });
+
+    return await this.roomService.create({
+      ...createRoomDto,
+      Images: arrayImage,
+    });
   }
 
   @ApiTags('room')
   @Put(':id')
+  @UseInterceptors(
+    FilesInterceptor('files', 20, {
+      fileFilter: fileExtensionFilter,
+      storage: storegeConfig('rooms'),
+    }),
+  )
   async updateRoom(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateRoomDto: UpdateRoomDto,
+    @UploadedFiles() files: Array<Express.Multer.File>,
   ) {
-    return await this.roomService.update(id, updateRoomDto);
+    let imageArray = [];
+    if (files)
+      imageArray = files.map((file) => {
+        return `${file.destination}/${file.filename}`;
+      });
+    return await this.roomService.update(id, {
+      ...updateRoomDto,
+      Images: imageArray,
+    });
   }
 
   @ApiTags('room')

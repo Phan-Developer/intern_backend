@@ -22,7 +22,7 @@ export class UploadFileService {
   }
 
   async deleteFileFromFilePath(fullPath: string) {
-    await fs.unlink(`uploads/${fullPath}`, (err) => {
+    await fs.unlink(fullPath, (err) => {
       if (err) {
         return err;
       }
