@@ -28,6 +28,13 @@ export class UserService {
     if (oldAvatarPath && img) {
       this.uploadFileService.deleteFileFromFilePath(oldAvatarPath);
     }
+    console.log('object');
+    console.log('object');
+    console.log('object');
+    console.log('object');
+    console.log('object');
+    console.log('object');
+    console.log('object');
     const result = await this.userTbService.updateUserByWeb(
       { ...data, Avatar: img },
       jwtPayload,
