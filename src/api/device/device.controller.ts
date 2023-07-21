@@ -18,7 +18,9 @@ import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
 import { Roles as roles } from '@/utils/variable';
 import { Roles } from '@/auth/roles.decorator';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { RolesGuard } from '@/auth/roles.guard';
 
+@ApiTags('Device')
 @Controller('device')
 export class DeviceController {
   constructor(private readonly deviceService: DeviceService) {}
@@ -26,8 +28,7 @@ export class DeviceController {
   // Create
   @Post()
   @ApiBearerAuth()
-  @ApiTags('Device')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(roles.ADMIN)
   async createDevice(@Body() device: CreateDeviceDto) {
     return await this.deviceService.create(device);
@@ -36,8 +37,7 @@ export class DeviceController {
   // Update
   @Put(':id')
   @ApiBearerAuth()
-  @ApiTags('Device')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(roles.ADMIN)
   async updateDevice(
     @Param('id', ParseUUIDPipe) id: string,
@@ -49,8 +49,7 @@ export class DeviceController {
   // Delete
   @Delete(':id')
   @ApiBearerAuth()
-  @ApiTags('Device')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(roles.ADMIN)
   async deleteDevice(@Param('id', ParseUUIDPipe) id: string) {
     return await this.deviceService.delete(id);
@@ -59,7 +58,6 @@ export class DeviceController {
   // Find and pagination
   @Get()
   @ApiBearerAuth()
-  @ApiTags('Device')
   @UseGuards(JwtAuthGuard)
   async findAndPagination(@Query() pagination: Pagination) {
     return await this.deviceService.findAndPagination(pagination);
@@ -68,7 +66,6 @@ export class DeviceController {
   // Find by id
   @Get(':id')
   @ApiBearerAuth()
-  @ApiTags('Device')
   @UseGuards(JwtAuthGuard)
   async findById(@Param('id', ParseUUIDPipe) id: string) {
     return await this.deviceService.findById(id);

@@ -20,7 +20,9 @@ import { JWTPayload } from '@/dto/jwt.dto';
 import { Roles as roles } from '@/utils/variable';
 import { Roles } from '@/auth/roles.decorator';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { RolesGuard } from '@/auth/roles.guard';
 
+@ApiTags('Notification')
 @Controller('notification')
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
@@ -28,8 +30,7 @@ export class NotificationController {
   // Create
   @Post()
   @ApiBearerAuth()
-  @ApiTags('Notification')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(roles.ADMIN)
   async create(@Body() createNotify: CreateNotifyDto, @Request() request) {
     if (!request.user) throw new UnauthorizedException();
@@ -40,8 +41,7 @@ export class NotificationController {
   // Update
   @Put(':id')
   @ApiBearerAuth()
-  @ApiTags('Notification')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(roles.ADMIN)
   async update(
     @Param('id', ParseUUIDPipe) id: string,
@@ -56,8 +56,7 @@ export class NotificationController {
   // Delete by notify id
   @Delete('delete-by-notify/:id')
   @ApiBearerAuth()
-  @ApiTags('Notification')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(roles.ADMIN)
   async deleteByNotifyId(@Param('id', ParseUUIDPipe) id: string) {
     return await this.notificationService.deleteByNotifyId(id);
@@ -66,8 +65,7 @@ export class NotificationController {
   // Delete by user id
   @Delete('delete-by-user/:id')
   @ApiBearerAuth()
-  @ApiTags('Notification')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(roles.ADMIN)
   async deleteByUserId(@Param('id', ParseUUIDPipe) id: string) {
     return await this.notificationService.deleteByUserId(id);
@@ -97,7 +95,6 @@ export class NotificationController {
     @Param('id', ParseUUIDPipe) id: string,
     @Query() pagination: Pagination,
   ) {
-    console.log('abc');
     const paginate = {
       page: pagination.page ? pagination.page : 1,
       size: pagination.size ? pagination.size : 10,

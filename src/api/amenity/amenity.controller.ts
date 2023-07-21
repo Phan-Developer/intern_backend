@@ -17,7 +17,9 @@ import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
 import { Roles as roles } from '@/utils/variable';
 import { Roles } from '@/auth/roles.decorator';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { RolesGuard } from '@/auth/roles.guard';
 
+@ApiTags('Amenity')
 @Controller('amenity')
 export class AmenityController {
   constructor(private readonly amenityService: AmenityService) {}
@@ -25,8 +27,8 @@ export class AmenityController {
   // Create
   @Post()
   @ApiBearerAuth()
-  @ApiTags('Amenity')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(roles.ADMIN)
   async createAmenity(@Body() amenity: CreateAmenityDto) {
     return await this.amenityService.create(amenity);
   }
@@ -34,8 +36,7 @@ export class AmenityController {
   // Update
   @Put(':id')
   @ApiBearerAuth()
-  @ApiTags('Amenity')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(roles.ADMIN)
   async updateAmenity(
     @Param('id', ParseUUIDPipe) id: string,
@@ -47,7 +48,7 @@ export class AmenityController {
   // Delete
   @Delete(':id')
   @ApiBearerAuth()
-  @ApiTags('Amenity')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(roles.ADMIN)
   async deleteAmenity(@Param('id', ParseUUIDPipe) id: string) {
     return await this.amenityService.delete(id);
@@ -56,7 +57,6 @@ export class AmenityController {
   // Find
   @Get()
   @ApiBearerAuth()
-  @ApiTags('Amenity')
   @UseGuards(JwtAuthGuard)
   async find(@Query() pagination: Pagination) {
     return await this.amenityService.findAndPagination(pagination);
@@ -65,7 +65,6 @@ export class AmenityController {
   // Find by id
   @Get(':id')
   @ApiBearerAuth()
-  @ApiTags('Amenity')
   @UseGuards(JwtAuthGuard)
   async findById(@Param('id', ParseUUIDPipe) id: string) {
     return await this.amenityService.findById(id);
