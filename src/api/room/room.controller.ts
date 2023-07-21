@@ -10,13 +10,18 @@ import {
   Delete,
   UploadedFiles,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { CreateRoomDto, UpdateRoomDto } from '@/dto/Room.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Pagination } from '@/service/comment-tb/comment-tb.service';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { fileExtensionFilter, storegeConfig } from '@/utils/filters';
+import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
+import { RolesGuard } from '@/auth/roles.guard';
+import { Roles } from '@/auth/roles.decorator';
+import { Roles as roles } from '@/utils/variable';
 
 @Controller('room')
 export class RoomController {
@@ -45,6 +50,8 @@ export class RoomController {
 
   @ApiTags('room')
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(roles.ADMIN)
   @UseInterceptors(
     FilesInterceptor('files', 20, {
       fileFilter: fileExtensionFilter,
@@ -67,6 +74,8 @@ export class RoomController {
 
   @ApiTags('room')
   @Put(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(roles.ADMIN)
   @UseInterceptors(
     FilesInterceptor('files', 20, {
       fileFilter: fileExtensionFilter,
@@ -91,6 +100,8 @@ export class RoomController {
 
   @ApiTags('room')
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(roles.ADMIN)
   async deleteRoom(@Param('id', ParseUUIDPipe) id: string) {
     return this.roomService.delete(id);
   }

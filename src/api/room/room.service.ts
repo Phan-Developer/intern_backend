@@ -13,6 +13,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { UploadFileService } from '../upload-file/upload-file.service';
+import * as fs from 'fs';
 
 @Injectable()
 export class RoomService {
@@ -89,6 +90,14 @@ export class RoomService {
   }
 
   async delete(roomId: string): Promise<string> {
+    const room = await this.roomTbService.findById(roomId);
+    if (!room) {
+      throw new NotFoundException('Không tìm thấy phòng');
+    }
+    room.Images.forEach((image) => {
+      fs.unlinkSync(image);
+    });
+
     await this.roomTbService.delete(roomId);
     return 'Xoá phòng thành công';
   }
