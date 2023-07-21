@@ -94,6 +94,7 @@ export class RoomService {
     if (!room) {
       throw new NotFoundException('Không tìm thấy phòng');
     }
+    console.log('delete');
     room.Images.forEach((image) => {
       fs.unlinkSync(image);
     });
