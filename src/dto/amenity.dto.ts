@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional } from 'class-validator';
 import { DeviceDto } from './device.dto';
-import { Device } from '../utils';
+import { Device } from '@/utils/types';
 
 export class AmenityDto {
   @ApiProperty({ type: String })
