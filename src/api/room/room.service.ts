@@ -1,10 +1,4 @@
 import { CreateRoomDto, UpdateRoomDto } from '@/dto/Room.dto';
-import { Pagination } from '@/service/comment-tb/comment-tb.service';
-import {
-  CreateRoomParams,
-  RoomTbService,
-  UpdateRoomParams,
-} from '@/service/room-tb/room-tb.service';
 import { TypeRoomTbService } from '@/service/type-room-tb/type-room-tb.service';
 import {
   Injectable,
@@ -14,6 +8,8 @@ import {
 } from '@nestjs/common';
 import { UploadFileService } from '../upload-file/upload-file.service';
 import * as fs from 'fs';
+import { RoomTbService } from '@/service/room-tb/room-tb.service';
+import { Pagination } from '@/utils/types';
 
 @Injectable()
 export class RoomService {
@@ -55,8 +51,8 @@ export class RoomService {
     });
   }
 
-  async update(id: string, updateRoomParams: UpdateRoomDto) {
-    const room = await this.roomTbService.findById(id);
+  async update(updateRoomParams: UpdateRoomDto) {
+    const room = await this.roomTbService.findById(updateRoomParams.ID);
     if (!room) {
       throw new NotFoundException('Không tìm thấy phòng');
     }
@@ -82,7 +78,7 @@ export class RoomService {
       room.Images = updateRoomParams.Images;
     }
 
-    return await this.roomTbService.update(id, {
+    return await this.roomTbService.update({
       ...updateRoomParams,
       Images: room.Images,
       TypeRoomId: typeRoom,

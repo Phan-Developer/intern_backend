@@ -14,11 +14,11 @@ import {
 } from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Pagination } from '@/service/comment-tb/comment-tb.service';
 import { CreateBookingDto, UpdateBookingDto } from '@/dto/booking.dto';
 import { Roles } from '@/auth/roles.decorator';
 import { Roles as roles } from '@/utils/variable';
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
+import { Pagination } from '@/utils/types';
 
 @Controller('booking')
 export class BookingController {
@@ -31,17 +31,17 @@ export class BookingController {
   @Get()
   async getAllBooking(
     @Query('page') page: number | undefined,
-    @Query('take') take: number | undefined,
+    @Query('size') size: number | undefined,
     @Request() req: any,
   ) {
     if (!req.user) {
       throw new UnauthorizedException();
     }
     const defaultPage = 1;
-    const defaultTake = 5;
+    const defaultSize = 5;
     const pagination = {
       page: page !== undefined ? page : defaultPage,
-      take: take !== undefined ? take : defaultTake,
+      size: size !== undefined ? size : defaultSize,
     } as Pagination;
     return await this.bookingService.findAll(pagination);
   }
@@ -80,16 +80,15 @@ export class BookingController {
   @ApiTags('booking')
   @Roles(roles.ADMIN)
   @UseGuards(JwtAuthGuard)
-  @Put(':id')
+  @Put()
   async editBooking(
-    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateBookingDto: UpdateBookingDto,
     @Request() req: any,
   ) {
     if (!req.user) {
       throw new UnauthorizedException();
     }
-    return await this.bookingService.update(id, updateBookingDto);
+    return await this.bookingService.update(updateBookingDto);
   }
 
   @ApiBearerAuth()

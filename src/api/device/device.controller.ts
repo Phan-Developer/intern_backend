@@ -57,14 +57,12 @@ export class DeviceController {
 
   // Find and pagination
   @Get()
-  @ApiBearerAuth()
   async findAndPagination(@Query() pagination: Pagination) {
     return await this.deviceService.findAndPagination(pagination);
   }
 
   // Find by id
   @Get(':id')
-  @ApiBearerAuth()
   async findById(@Param('id', ParseUUIDPipe) id: string) {
     return await this.deviceService.findById(id);
   }

@@ -15,11 +15,11 @@ import {
 import { CommentService } from './comment.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateCommentDto, UpdateCommentDto } from '@/dto/Comment.dto';
-import { Pagination } from '@/service/comment-tb/comment-tb.service';
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
 import { RolesGuard } from '@/auth/roles.guard';
 import { Roles } from '@/auth/roles.decorator';
 import { Roles as roles } from '@/utils/variable';
+import { Pagination } from '@/utils/types';
 
 @Controller('comment')
 export class CommentController {
@@ -29,13 +29,13 @@ export class CommentController {
   @Get()
   async getComment(
     @Query('page') page: number | undefined,
-    @Query('take') take: number | undefined,
+    @Query('size') size: number | undefined,
   ) {
     const defaultPage = 1;
-    const defaultTake = 5;
+    const defaultSize = 5;
     const pagination = {
       page: page !== undefined ? page : defaultPage,
-      take: take !== undefined ? take : defaultTake,
+      size: size !== undefined ? size : defaultSize,
     } as Pagination;
     return await this.commentService.getComment(pagination);
   }
@@ -62,9 +62,8 @@ export class CommentController {
   @ApiTags('comment')
   @Roles(roles.USER, roles.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Put(':id')
+  @Put()
   async editComment(
-    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateCommentDto: UpdateCommentDto,
     @Request() req: any,
   ) {
@@ -72,7 +71,6 @@ export class CommentController {
       throw new UnauthorizedException();
     }
     return await this.commentService.updateComment(
-      id,
       updateCommentDto,
       req.user.ID,
     );

@@ -1,37 +1,20 @@
 import { BookingEntity } from '@/entities/Booking.entity';
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { RoomTbService } from '../room-tb/room-tb.service';
-import { UserTbService } from '../user-tb/user-tb.service';
-import { Pagination } from '../comment-tb/comment-tb.service';
-
-export interface CreateBookingParams {
-  RoomId: string;
-  ArrivalDate: Date;
-}
-
-export interface UpdateBookingParams {
-  RoomId?: string;
-  UserId?: string;
-  ArrivalDate?: Date;
-  CheckIn?: Date;
-  CheckOut?: Date;
-  TotalMoney?: number;
-  Status?: boolean;
-}
+import {
+  CreateBookingParams,
+  Pagination,
+  UpdateBookingParams,
+} from '@/utils/types';
+import { UserEntity } from '@/entities/user.entity';
+import { RoomEntity } from '@/entities/Room.entity';
 
 @Injectable()
 export class BookingTbService {
   constructor(
     @InjectRepository(BookingEntity)
     private bookingTbRepository: Repository<BookingEntity>,
-    private readonly roomTbService: RoomTbService,
-    private readonly userTbService: UserTbService,
   ) {}
 
   async findById(id: string): Promise<BookingEntity> {
@@ -39,36 +22,27 @@ export class BookingTbService {
   }
 
   async findAll(pagination: Pagination) {
-    const skip = (pagination.page - 1) * pagination.take;
+    const skip = (pagination.page - 1) * pagination.size;
     const totalComment = await this.bookingTbRepository.count();
-    const totaPage = Math.ceil(totalComment / pagination.take);
+    const totaPage = Math.ceil(totalComment / pagination.size);
 
     const bookings = await this.bookingTbRepository.find({
-      take: pagination.take,
+      take: pagination.size,
       skip: skip,
+      order: { CreatedAt: 'DESC' },
     });
     return {
       currentPage: pagination.page,
-      take: pagination.take,
       totalComment: totalComment,
-      totaPage: totaPage,
       bookings,
     };
   }
 
   async create(
     createBookingParams: CreateBookingParams,
-    userId: string,
+    user: UserEntity,
+    room: RoomEntity,
   ): Promise<BookingEntity> {
-    const room = await this.roomTbService.findById(createBookingParams.RoomId);
-    if (!room) {
-      throw new NotFoundException('Không tìm thấy phòng');
-    }
-
-    const user = await this.userTbService.findById(userId);
-    if (!user) {
-      throw new UnauthorizedException();
-    }
     const createBooking = await this.bookingTbRepository.create({
       RoomId: room,
       UserId: user,
@@ -78,8 +52,8 @@ export class BookingTbService {
   }
 
   async update(
-    id: string,
     updateBookingParams: UpdateBookingParams,
+    id: string,
   ): Promise<BookingEntity> {
     const booking = await this.findById(id);
     if (!booking) {
@@ -104,6 +78,10 @@ export class BookingTbService {
   }
 
   async delete(id: string) {
+    const booking = await this.findById(id);
+    if (!booking) {
+      throw new NotFoundException('Booking không tồn tại');
+    }
     return await this.bookingTbRepository.softDelete(id);
   }
 }
