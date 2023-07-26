@@ -36,6 +36,10 @@ export class CreateDeviceParams {
 
 export class UpdateDeviceDto {
   @ApiProperty({ type: String })
+  @IsNotEmpty({ message: 'Mã thiết bị  không được để trống' })
+  ID: string;
+
+  @ApiProperty({ type: String })
   @IsOptional()
   @IsNotEmpty({ message: 'Tên thiết bị không được để trống' })
   Name: string;

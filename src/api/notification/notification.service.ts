@@ -3,6 +3,7 @@ import { NotificationTbService } from '@/service/notification-tb/notification-tb
 import { UserTbService } from '@/service/user-tb/user-tb.service';
 import { Pagination } from '@/utils/types';
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -30,13 +31,9 @@ export class NotificationService {
   }
 
   // Update
-  async update(
-    notifyId: string,
-    updateNotify: UpdateNotifyDto,
-    userId: string,
-  ) {
+  async update(updateNotify: UpdateNotifyDto, userId: string) {
     // find notify
-    const notify = await this.notifyTbService.findOne({ ID: notifyId });
+    const notify = await this.notifyTbService.findById(updateNotify.ID);
 
     if (!notify) throw new NotFoundException('Không tìm thấy thông báo');
 
@@ -56,10 +53,7 @@ export class NotificationService {
   async deleteByNotifyId(notifyId: string) {
     const notifyDeleted = await this.notifyTbService.deleteByNotifyId(notifyId);
     if (notifyDeleted.affected !== 1)
-      throw new HttpException(
-        'Lỗi khi thực thi lệnh xóa',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException('Lỗi khi thực thi lệnh xóa');
     return { message: 'Xoá thành công' };
   }
 
@@ -70,10 +64,7 @@ export class NotificationService {
     );
 
     if (allNotifyOfUserDeleted.affected === 0)
-      throw new HttpException(
-        'Lỗi khi thực thi lệnh xóa',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException('Lỗi khi thực thi lệnh xóa');
     return { message: 'Toàn bộ thông báo đã được xóa' };
   }
 
@@ -84,12 +75,8 @@ export class NotificationService {
 
   // Find by notify id
   async findByNotifyId(notifyId: string) {
-    const notify = await this.notifyTbService.findOne({ ID: notifyId });
-    if (!notify)
-      throw new HttpException(
-        'Không thể tìm thấy thông báo',
-        HttpStatus.BAD_REQUEST,
-      );
+    const notify = await this.notifyTbService.findById(notifyId);
+    if (!notify) throw new BadRequestException('Không thể tìm thấy thông báo');
     return notify;
   }
 

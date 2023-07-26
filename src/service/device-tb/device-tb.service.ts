@@ -34,12 +34,14 @@ export class DeviceTbService {
       relations: ['Amenity', 'Amenity.Devices'],
       take: pagination.size,
       skip: (pagination.page - 1) * pagination.size,
+      order: {
+        CreatedAt: 'DESC',
+      },
     });
     return {
       data: result,
       pagination: {
         page: pagination.page,
-        size: pagination.size > total ? total : pagination.size,
         count: total,
       } as Pagination,
     };
@@ -48,20 +50,20 @@ export class DeviceTbService {
   // Find by Amenity Id
   async findByAmenityId(amenityId: string) {
     return await this.deviceRepository.find({
-      relations: ['Amenity'],
       where: {
         Amenity: {
           ID: amenityId,
         },
       },
+      relations: ['Amenity'],
     });
   }
 
-  // Find one
-  async findOne(options: Partial<Device>) {
+  // find by id
+  async findById(id: string) {
     return await this.deviceRepository.findOne({
+      where: { ID: id },
       relations: ['Amenity', 'Amenity.Devices'],
-      where: { ...options },
     });
   }
 }

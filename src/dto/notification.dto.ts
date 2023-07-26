@@ -28,6 +28,10 @@ export class CreateNotifyParams {
 
 export class UpdateNotifyDto {
   @ApiProperty({ type: String })
+  @IsNotEmpty({ message: 'Mã thông báo không được để trống' })
+  ID: string;
+
+  @ApiProperty({ type: String })
   @IsOptional()
   @IsNotEmpty({ message: 'Tiêu đề thông báo không được để trống' })
   Title: string;

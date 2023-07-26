@@ -34,15 +34,12 @@ export class TypeRoomController {
   }
 
   // Update
-  @Put(':id')
+  @Put()
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(roles.ADMIN)
-  async updateTypeRoom(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() typeRoom: UpdateTypeRoomDto,
-  ) {
-    return await this.typeRoomService.update(id, typeRoom);
+  async updateTypeRoom(@Body() typeRoom: UpdateTypeRoomDto) {
+    return await this.typeRoomService.update(typeRoom);
   }
 
   // Delete

@@ -3,8 +3,7 @@ import { AmenityTbService } from '@/service/amenity-tb/amenity-tb.service';
 import { DeviceTbService } from '@/service/device-tb/device-tb.service';
 import { Pagination } from '@/utils/types';
 import {
-  HttpException,
-  HttpStatus,
+  BadRequestException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -22,16 +21,18 @@ export class AmenityService {
   }
 
   // Update
-  async update(amenityId: string, updateAmenity: UpdateAmenityDto) {
+  async update(updateAmenity: UpdateAmenityDto) {
     // find Amenity
-    const amenity = await this.amenityTbService.findOne({ ID: amenityId });
+    const amenity = await this.amenityTbService.findOne({
+      ID: updateAmenity.ID,
+    });
 
-    if (!amenity)
-      throw new NotFoundException(
-        'Không tìm thấy Amenity với id: ' + amenityId,
-      );
+    if (!amenity) throw new NotFoundException('Không tìm thấy Amenity');
+
     // find Device list
-    const devices = await this.deviceTbService.findByAmenityId(amenityId);
+    const devices = await this.deviceTbService.findByAmenityId(
+      updateAmenity.ID,
+    );
 
     return await this.amenityTbService.update({
       ...amenity,
@@ -44,10 +45,7 @@ export class AmenityService {
   async delete(amenityId: string) {
     const amenityDeleted = await this.amenityTbService.delete(amenityId);
     if (amenityDeleted.affected !== 1)
-      throw new HttpException(
-        'Lỗi khi thực thi lệnh xóa',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException('Lỗi khi thực thi lệnh xóa');
     return { message: 'Xoá thành công' };
   }
 
@@ -60,12 +58,8 @@ export class AmenityService {
 
   // Find by id
   async findById(amenityId: string) {
-    const amenity = await this.amenityTbService.findOne({ ID: amenityId });
-    if (!amenity)
-      throw new HttpException(
-        'Không thể tìm thấy Amenity với id: ' + amenityId,
-        HttpStatus.BAD_REQUEST,
-      );
+    const amenity = await this.amenityTbService.findById(amenityId);
+    if (!amenity) throw new BadRequestException('Không thể tìm thấy amenity');
     return amenity;
   }
 }

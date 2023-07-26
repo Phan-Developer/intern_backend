@@ -3,6 +3,7 @@ import { AmenityTbService } from '@/service/amenity-tb/amenity-tb.service';
 import { DeviceTbService } from '@/service/device-tb/device-tb.service';
 import { Pagination } from '@/utils/types';
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -23,10 +24,7 @@ export class DeviceService {
       ID: createDevice.AmenityId,
     });
 
-    if (!amenity)
-      throw new NotFoundException(
-        'Không thể tìm thấy Amenity với id: ' + createDevice.AmenityId,
-      );
+    if (!amenity) throw new NotFoundException('Không thể tìm thấy amenity');
 
     return await this.deviceTbService.create({
       ...createDevice,
@@ -35,24 +33,18 @@ export class DeviceService {
   }
 
   // Update
-  async update(deviceId: string, updateDevice: UpdateDeviceDto) {
+  async update(updateDevice: UpdateDeviceDto) {
     // find the device
-    const device = await this.deviceTbService.findOne({ ID: deviceId });
+    const device = await this.deviceTbService.findById(updateDevice.ID);
 
-    if (!device)
-      throw new NotFoundException(
-        'Không thể tìm thấy thiết bị với id: ' + deviceId,
-      );
+    if (!device) throw new NotFoundException('Không thể tìm thấy thiết bị');
 
     // find amenity to add device
-    const amenity = await this.amenityTbService.findOne({
-      ID: updateDevice.AmenityId,
-    });
+    const amenity = await this.amenityTbService.findById(
+      updateDevice.AmenityId,
+    );
 
-    if (!amenity)
-      throw new NotFoundException(
-        'Không thể tìm thấy Amenity với id: ' + updateDevice.AmenityId,
-      );
+    if (!amenity) throw new NotFoundException('Không thể tìm thấy amenity');
 
     return await this.deviceTbService.update({
       ...device,
@@ -66,10 +58,7 @@ export class DeviceService {
     const deviceDeleted = await this.deviceTbService.delete(deviceId);
 
     if (deviceDeleted.affected !== 1)
-      throw new HttpException(
-        'Lỗi khi thực thi lệnh xóa thiết bị',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException('Lỗi khi thực thi lệnh xóa thiết bị');
     return { message: 'Xoá thành công' };
   }
 
@@ -82,12 +71,8 @@ export class DeviceService {
 
   // Find by id
   async findById(deviceId: string) {
-    const device = await this.deviceTbService.findOne({ ID: deviceId });
-    if (!device)
-      throw new HttpException(
-        'Không thể tìm thấy thiết bị với id: ' + deviceId,
-        HttpStatus.BAD_REQUEST,
-      );
+    const device = await this.deviceTbService.findById(deviceId);
+    if (!device) throw new BadRequestException('Không thể tìm thấy thiết bị');
     return device;
   }
 }

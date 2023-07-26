@@ -31,14 +31,17 @@ export class TypeRoomTbService {
   // Find and pagination
   async find(pagination: Pagination) {
     const [result, total] = await this.typeRoomRepository.findAndCount({
+      relations: ['Rooms'],
       take: pagination.size,
       skip: (pagination.page - 1) * pagination.size,
+      order: {
+        CreatedAt: 'DESC',
+      },
     });
     return {
       data: result,
       pagination: {
         page: pagination.page,
-        size: pagination.size > total ? total : pagination.size,
         count: total,
       },
     };
@@ -55,6 +58,7 @@ export class TypeRoomTbService {
   async findById(id: string) {
     return await this.typeRoomRepository.findOne({
       where: { ID: id },
+      relations: ['Rooms'],
     });
   }
 }
