@@ -39,18 +39,14 @@ export class NotificationController {
   }
 
   // Update
-  @Put(':id')
+  @Put()
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(roles.ADMIN)
-  async update(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() updateNotify: UpdateNotifyDto,
-    @Request() request,
-  ) {
+  async update(@Body() updateNotify: UpdateNotifyDto, @Request() request) {
     if (!request.user) throw new UnauthorizedException();
     const user: JWTPayload = request.user;
-    return await this.notificationService.update(id, updateNotify, user.ID);
+    return await this.notificationService.update(updateNotify, user.ID);
   }
 
   // Delete by notify id

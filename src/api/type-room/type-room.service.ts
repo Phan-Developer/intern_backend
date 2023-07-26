@@ -2,6 +2,7 @@ import { CreateTypeRoomDto, UpdateTypeRoomDto } from '@/dto/type.room.dto';
 import { TypeRoomTbService } from '@/service/type-room-tb/type-room-tb.service';
 import { Pagination } from '@/utils/types';
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -18,11 +19,9 @@ export class TypeRoomService {
   }
 
   // update
-  async update(typeRoomId: string, updateTypeRoom: UpdateTypeRoomDto) {
+  async update(updateTypeRoom: UpdateTypeRoomDto) {
     // find the type room
-    const typeRoom = await this.typeRoomTbService.findOne({
-      ID: typeRoomId,
-    });
+    const typeRoom = await this.typeRoomTbService.findById(updateTypeRoom.ID);
 
     if (!typeRoom) throw new NotFoundException('Loại phòng không tồn tại');
     return await this.typeRoomTbService.update({
@@ -36,10 +35,7 @@ export class TypeRoomService {
     const typeRoomDeleted = await this.typeRoomTbService.delete(typeRoomId);
 
     if (typeRoomDeleted.affected !== 1)
-      throw new HttpException(
-        'Lỗi khi thực thi lệnh xóa TypeRoom',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException('Lỗi khi thực thi lệnh xóa TypeRoom');
     return { message: 'Xoá thành công' };
   }
 
@@ -52,12 +48,8 @@ export class TypeRoomService {
 
   // find by id
   async findById(typeRoomId: string) {
-    const typeRoom = await this.typeRoomTbService.findOne({ ID: typeRoomId });
-    if (!typeRoom)
-      throw new HttpException(
-        'Không thể tìm thấy TypeRoom với id: ' + typeRoomId,
-        HttpStatus.BAD_REQUEST,
-      );
+    const typeRoom = await this.typeRoomTbService.findById(typeRoomId);
+    if (!typeRoom) throw new BadRequestException('Không thể tìm thấy TypeRoom');
     return typeRoom;
   }
 }

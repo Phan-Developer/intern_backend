@@ -27,22 +27,17 @@ export class AmenityController {
   // Create
   @Post()
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(roles.ADMIN)
+  @UseGuards(JwtAuthGuard)
   async createAmenity(@Body() amenity: CreateAmenityDto) {
     return await this.amenityService.create(amenity);
   }
 
   // Update
-  @Put(':id')
+  @Put()
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(roles.ADMIN)
-  async updateAmenity(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() newAmenity: UpdateAmenityDto,
-  ) {
-    return await this.amenityService.update(id, newAmenity);
+  @UseGuards(JwtAuthGuard)
+  async updateAmenity(@Body() newAmenity: UpdateAmenityDto) {
+    return await this.amenityService.update(newAmenity);
   }
 
   // Delete

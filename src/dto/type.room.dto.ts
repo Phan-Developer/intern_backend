@@ -13,6 +13,10 @@ export class CreateTypeRoomDto {
 
 export class UpdateTypeRoomDto {
   @ApiProperty({ type: String })
+  @IsNotEmpty({ message: 'ID loại phòng không được để trống' })
+  ID: string;
+
+  @ApiProperty({ type: String })
   @IsOptional()
   @IsNotEmpty({ message: 'Loại phòng không được để trống' })
   Type: string;

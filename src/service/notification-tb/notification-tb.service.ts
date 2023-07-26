@@ -31,12 +31,7 @@ export class NotificationTbService {
   // Delete all notify with user id
   // Implement softDelete a list data
   async deleteByUserId(id: string) {
-    return await this.notifyRepository
-      .createQueryBuilder()
-      .update(NotificationEntity)
-      .set({ DeletedAt: new Date() })
-      .where('UserId.ID = :id', { id })
-      .execute();
+    return await this.notifyRepository.softDelete({ UserId: { ID: id } });
   }
 
   // Find and pagination
@@ -45,22 +40,32 @@ export class NotificationTbService {
       relations: ['UserId'],
       take: pagination.size,
       skip: (pagination.page - 1) * pagination.size,
+      order: {
+        CreatedAt: 'DESC',
+      },
     });
     return {
       data: result,
       pagination: {
         page: pagination.page,
-        size: pagination.size > total ? total : pagination.size,
         count: total,
       } as Pagination,
     };
   }
 
+  // Find by id
+  async findById(id: string) {
+    return await this.notifyRepository.findOne({
+      where: { ID: id },
+      relations: ['UserId'],
+    });
+  }
+
   // Find one
   async findOne(options: Partial<Notification>) {
     return await this.notifyRepository.findOne({
-      relations: ['UserId'],
       where: { ...options },
+      relations: ['UserId'],
     });
   }
 
@@ -75,13 +80,15 @@ export class NotificationTbService {
       relations: ['UserId'],
       take: pagination.size,
       skip: (pagination.page - 1) * pagination.size,
+      order: {
+        CreatedAt: 'DESC',
+      },
     });
 
     return {
       data: result,
       pagination: {
         page: pagination.page,
-        size: pagination.size > total ? total : pagination.size,
         count: total,
       } as Pagination,
     };

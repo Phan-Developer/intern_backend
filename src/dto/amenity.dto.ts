@@ -41,7 +41,6 @@ export class UpdateAmenityDto {
   Type: string;
 
   @ApiProperty({ type: Object })
-  @IsNotEmpty({ message: 'Danh sách mã thiết bị không được để trống' })
   DeviceIdList: string[];
 }
 

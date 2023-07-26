@@ -35,15 +35,12 @@ export class DeviceController {
   }
 
   // Update
-  @Put(':id')
+  @Put()
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(roles.ADMIN)
-  async updateDevice(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() updateDevice: UpdateDeviceDto,
-  ) {
-    return await this.deviceService.update(id, updateDevice);
+  async updateDevice(@Body() updateDevice: UpdateDeviceDto) {
+    return await this.deviceService.update(updateDevice);
   }
 
   // Delete

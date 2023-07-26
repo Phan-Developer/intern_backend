@@ -34,15 +34,21 @@ export class AmenityTbService {
       relations: ['Devices'],
       take: pagination.size,
       skip: (pagination.page - 1) * pagination.size,
+      order: {
+        CreatedAt: 'DESC',
+      },
     });
     return {
       data: result,
-      pagination: {
-        page: pagination.page,
-        size: pagination.size > total ? total : pagination.size,
-        count: total,
-      } as Pagination,
+      count: total,
     };
+  }
+
+  async findById(id: string): Promise<Amenity> {
+    return await this.amenityRepository.findOne({
+      relations: ['Devices'],
+      where: { ID: id },
+    });
   }
 
   // Find one
