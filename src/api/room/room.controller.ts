@@ -15,13 +15,13 @@ import {
 import { RoomService } from './room.service';
 import { CreateRoomDto, UpdateRoomDto } from '@/dto/Room.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { Pagination } from '@/service/comment-tb/comment-tb.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { fileExtensionFilter, storegeConfig } from '@/utils/filters';
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
 import { RolesGuard } from '@/auth/roles.guard';
 import { Roles } from '@/auth/roles.decorator';
 import { Roles as roles } from '@/utils/variable';
+import { Pagination } from '@/utils/types';
 
 @Controller('room')
 export class RoomController {
@@ -36,13 +36,13 @@ export class RoomController {
   @Get()
   async getRoom(
     @Query('page') page: number | undefined,
-    @Query('take') take: number | undefined,
+    @Query('size') size: number | undefined,
   ) {
     const defaultPage = 1;
-    const defaultTake = 5;
+    const defaultSize = 5;
     const pagination = {
       page: page !== undefined ? page : defaultPage,
-      take: take !== undefined ? take : defaultTake,
+      size: size !== undefined ? size : defaultSize,
     } as Pagination;
 
     return await this.roomService.findRoom(pagination);
@@ -73,7 +73,6 @@ export class RoomController {
   }
 
   @ApiTags('room')
-  @Put(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(roles.ADMIN)
   @UseInterceptors(
@@ -83,7 +82,6 @@ export class RoomController {
     }),
   )
   async updateRoom(
-    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateRoomDto: UpdateRoomDto,
     @UploadedFiles() files: Array<Express.Multer.File>,
   ) {
@@ -92,7 +90,7 @@ export class RoomController {
       imageArray = files.map((file) => {
         return `${file.destination}/${file.filename}`;
       });
-    return await this.roomService.update(id, {
+    return await this.roomService.update({
       ...updateRoomDto,
       Images: imageArray,
     });

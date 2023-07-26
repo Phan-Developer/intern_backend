@@ -1,12 +1,22 @@
 import { CreateBookingDto, UpdateBookingDto } from '@/dto/booking.dto';
 import { BookingEntity } from '@/entities/Booking.entity';
 import { BookingTbService } from '@/service/booking-tb/booking-tb.service';
-import { Pagination } from '@/service/comment-tb/comment-tb.service';
-import { Injectable } from '@nestjs/common';
+import { RoomTbService } from '@/service/room-tb/room-tb.service';
+import { UserTbService } from '@/service/user-tb/user-tb.service';
+import { Pagination } from '@/utils/types';
+import {
+  Injectable,
+  UnauthorizedException,
+  NotFoundException,
+} from '@nestjs/common';
 
 @Injectable()
 export class BookingService {
-  constructor(private readonly bookingTbService: BookingTbService) {}
+  constructor(
+    private readonly bookingTbService: BookingTbService,
+    private readonly userTbService: UserTbService,
+    private readonly roomTbService: RoomTbService,
+  ) {}
 
   async findById(id: string): Promise<BookingEntity> {
     return this.bookingTbService.findById(id);
@@ -20,19 +30,31 @@ export class BookingService {
     createBookingDto: CreateBookingDto,
     userId: string,
   ): Promise<BookingEntity> {
-    return await this.bookingTbService.create(createBookingDto, userId);
+    const user = await this.userTbService.findById(userId);
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    const room = await this.roomTbService.findById(createBookingDto.RoomId);
+    if (!room) {
+      throw new NotFoundException('Không tìm thấy phòng');
+    }
+    return await this.bookingTbService.create(createBookingDto, user, room);
   }
 
-  async update(
-    bookingId: string,
-    updateBookingDto: UpdateBookingDto,
-  ): Promise<BookingEntity> {
-    return await this.bookingTbService.update(bookingId, updateBookingDto);
+  async update(updateBookingDto: UpdateBookingDto): Promise<BookingEntity> {
+    const booking = await this.findById(updateBookingDto.ID);
+    if (!booking) {
+      throw new NotFoundException('Booking không tồn tại');
+    }
+    return await this.bookingTbService.update(
+      updateBookingDto,
+      updateBookingDto.ID,
+    );
   }
 
   async delete(id: string): Promise<string> {
     await this.bookingTbService.delete(id);
-
     return 'Xoá booking thành công';
   }
 }

@@ -48,6 +48,9 @@ export class CreateRoomDto {
 
 export class UpdateRoomDto {
   @ApiProperty({ type: String })
+  ID?: string;
+
+  @ApiProperty({ type: String })
   Title?: string;
 
   @ApiProperty({ type: String })

@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsDate,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 
 export class CreateBookingDto {
   @ApiProperty({ type: String })
@@ -12,13 +18,8 @@ export class CreateBookingDto {
 }
 
 export class UpdateBookingDto {
-  // @ApiProperty({ type: String })
-  // @IsNotEmpty({ message: 'Phòng không được để trống' })
-  // RoomId: string;
-
-  // @ApiProperty({ type: String })
-  // @IsNotEmpty({ message: 'Người dùng không được để trống' })
-  // UserId: string;
+  @IsUUID()
+  ID: string;
 
   @ApiProperty({ type: Date })
   @IsNotEmpty({ message: 'CheckIn không được để trống' })

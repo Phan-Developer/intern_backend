@@ -45,3 +45,61 @@ export interface Notification extends BaseEntityType {
   Status: boolean;
   UserId: User;
 }
+
+export interface CreateRoomParams {
+  Title: string;
+  Description: string;
+  Images?: string[]; // edit
+  Address: string;
+  Latitude: string;
+  Longtitude: string;
+  Guests: number;
+  Bedroom: number;
+  Beds: number;
+  Price: number;
+  TypeRoomId: TypeRoom;
+}
+
+export interface UpdateRoomParams {
+  ID?: string;
+  Title?: string;
+  Description?: string;
+  Images?: string[];
+  Address?: string;
+  Latitude?: string;
+  Longtitude?: string;
+  Guests?: number;
+  Bedroom?: number;
+  Beds?: number;
+  Price?: number;
+  IsBooking?: boolean;
+  TypeRoomId: TypeRoom;
+}
+
+export interface CreateCommentParams {
+  RoomId: string;
+  UserId: string;
+  RatingValue: number;
+  Content: string;
+}
+
+export interface UpdateCommentParams {
+  ID: string;
+  RatingValue?: number;
+  Content?: string;
+}
+
+export interface CreateBookingParams {
+  RoomId: string;
+  ArrivalDate: Date;
+}
+
+export interface UpdateBookingParams {
+  RoomId?: string;
+  UserId?: string;
+  ArrivalDate?: Date;
+  CheckIn?: Date;
+  CheckOut?: Date;
+  TotalMoney?: number;
+  Status?: boolean;
+}
