@@ -1,7 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
 
 export class CreateCommentDto {
+  @IsUUID()
+  ID: string;
+
   @ApiProperty()
   @IsNotEmpty({ message: 'ID phòng không được để trống' })
   RoomId: string;
@@ -16,6 +19,9 @@ export class CreateCommentDto {
 }
 
 export class UpdateCommentDto {
+  @IsUUID()
+  ID: string;
+
   @ApiProperty({ type: Number })
   @IsOptional()
   RatingValue?: number;
